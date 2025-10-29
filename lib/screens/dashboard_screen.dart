@@ -75,8 +75,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   /// ======== KPIs (Saldo, Receitas, Despesas) ========
   Widget _buildKpiRow() {
-    return Row(
-      children: const [
+    return const Row(
+      children: [
         Expanded(
           child: _KpiCard(
             label: "Saldo Total",
