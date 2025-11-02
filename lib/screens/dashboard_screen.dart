@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'transactions_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -31,40 +32,70 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Expanded(
               flex: 3,
               child: _GlassPanel(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Stack(
                     children: [
-                      const Text(
-                        "Painel Financeiro",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 18),
-                      _buildKpiRow(),
-                      const SizedBox(height: 20),
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            selectedIndex == 0
-                                ? "📊 Área de dados e relatórios"
-                                : selectedIndex == 1
-                                    ? "💰 Transações e categorias"
-                                    : "⚙️ Configurações do app",
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 16,
-                            ),
+                              Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Painel Financeiro",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 18),
+              _buildKpiRow(),
+              const SizedBox(height: 20),
+              Expanded(
+                child: Center(
+                  child: selectedIndex == 1
+                      ? const TransactionsScreen()
+                      : Text(
+                          selectedIndex == 0
+                              ? "Área do grafico e de exportar relatório em PDF"
+                              : "⚙️ Configurações do app",
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 16,
                           ),
                         ),
-                      ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          right: 20,
+          bottom: 20,
+          child: FloatingActionButton.extended(
+            onPressed:(){
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text("Exportar PDF"),
+                  content: const Text("Relatório exportado com sucesso!"),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text("OK"),
+                    ),
+                  ],
+                ),
+              );
+            },
+            icon: const Icon(Icons.picture_as_pdf),
+            label: const Text("Exportar PDF"),
+            backgroundColor: Colors.white.withOpacity(0.15),
+            foregroundColor: Colors.white,
+            elevation: 0,
+          ),
+        ),
                     ],
                   ),
-                ),
               ),
             ),
           ],
@@ -80,7 +111,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Expanded(
           child: _KpiCard(
             label: "Saldo Total",
-            value: "R\$ 5.430,00",
+            value: "R\$ 0",
             color: Color(0xFF22C55E),
           ),
         ),
@@ -88,7 +119,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Expanded(
           child: _KpiCard(
             label: "Receitas",
-            value: "R\$ 8.900,00",
+            value: "R\$ 0",
             color: Color(0xFFA855F7),
           ),
         ),
@@ -96,7 +127,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Expanded(
           child: _KpiCard(
             label: "Despesas",
-            value: "R\$ 3.470,00",
+            value: "R\$ 0",
             color: Color(0xFFF87171),
           ),
         ),
@@ -138,7 +169,7 @@ class _Sidebar extends StatelessWidget {
             children: [
               const SizedBox(height: 24),
               const Text(
-                "💰 MoneyYOU",
+                "LOGOTIPO DO APP",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w800,
