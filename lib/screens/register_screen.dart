@@ -1,19 +1,20 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'dashboard_screen.dart';
-import 'register_screen.dart';
+import 'login_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
+class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProviderStateMixin {
+  final _nameCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
-  String? errorMsg;
+  final _confirmCtrl = TextEditingController();
+
   bool isLoading = false;
 
   late AnimationController _controller;
@@ -34,31 +35,19 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   @override
   void dispose() {
     _controller.dispose();
+    _nameCtrl.dispose();
     _emailCtrl.dispose();
     _passCtrl.dispose();
+    _confirmCtrl.dispose();
     super.dispose();
   }
 
-  Future<void> _login() async {
-    setState(() {
-      errorMsg = null;
-      isLoading = true;
-    });
-
+  Future<void> _register() async {
+    setState(() => isLoading = true);
     await Future.delayed(const Duration(seconds: 1));
-
-    if (_emailCtrl.text == "admin" && _passCtrl.text == "1234") {
-      if (!mounted) return;
-      Navigator.of(context).pushReplacement(PageRouteBuilder(
-        pageBuilder: (_, __, ___) => const DashboardScreen(),
-        transitionsBuilder: (_, a, __, child) => FadeTransition(opacity: a, child: child),
-      ));
-    } else {
-      setState(() {
-        errorMsg = "Usuário ou senha incorretos";
-        isLoading = false;
-      });
-    }
+    if (!mounted) return;
+    setState(() => isLoading = false);
+    print("Registrar novo usuário");
   }
 
   @override
@@ -97,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  "Bem-vindo de volta 👋",
+                  "Crie sua conta ",
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w800,
@@ -105,14 +94,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   ),
                 ),
                 const SizedBox(height: 24),
-                _loginCard(context),
-                if (errorMsg != null) ...[
-                  const SizedBox(height: 16),
-                  Text(
-                    errorMsg!,
-                    style: const TextStyle(color: Colors.redAccent, fontSize: 13),
-                  ),
-                ]
+                _registerCard(context),
               ],
             ),
           ),
@@ -121,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     );
   }
 
-  Widget _loginCard(BuildContext context) {
+  Widget _registerCard(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(18),
       child: BackdropFilter(
@@ -138,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                "Acesse sua conta para continuar",
+                "Preencha os dados abaixo para se registrar",
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 15,
@@ -146,12 +128,17 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 ),
               ),
               const SizedBox(height: 20),
-              _glassInput("Usuário ou E-mail", _emailCtrl, Icons.person_outline, false),
+              _glassInput("Nome completo", _nameCtrl, Icons.person_outline, false),
+              const SizedBox(height: 14),
+              _glassInput("E-mail", _emailCtrl, Icons.email_outlined, false),
               const SizedBox(height: 14),
               _glassInput("Senha", _passCtrl, Icons.lock_outline, true),
+              const SizedBox(height: 14),
+              _glassInput("Confirmar senha", _confirmCtrl, Icons.lock_outline, true),
               const SizedBox(height: 20),
+
               GestureDetector(
-                onTap: isLoading ? null : _login,
+                onTap: isLoading ? null : _register,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 250),
                   width: double.infinity,
@@ -182,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                             ),
                           )
                         : const Text(
-                            "Entrar",
+                            "Registrar",
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
@@ -192,23 +179,25 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   ),
                 ),
               ),
-              const SizedBox(height: 16,),
+              const SizedBox(height: 16),
+
               Center(
                 child: TextButton(
-                  onPressed:() {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
                     );
                   },
                   child: const Text(
-                    "Não tem uma conta/ Registre-se",
+                    "Já tem conta? Entrar",
                     style: TextStyle(
-                      color: Color(0xffa855f7),
-                      fontWeight: FontWeight.w600
+                      color: Color(0xFFA855F7),
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                )
-              )
+                ),
+              ),
             ],
           ),
         ),
