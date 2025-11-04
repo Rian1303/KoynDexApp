@@ -9,7 +9,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool darkMode = false;
+  bool lightMode = false;
   String currency = 'USD';
   String language = 'English';
 
@@ -48,11 +48,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   SwitchListTile(
                     activeThumbColor: Colors.purpleAccent,
                     title: const Text(
-                      "Modo escuro",
+                      "Modo claro",
                       style: TextStyle(color: Colors.white),
                     ),
-                    value: darkMode,
-                    onChanged: (v) => setState(() => darkMode = v),
+                    value: lightMode,
+                    onChanged: (v) => setState(() => lightMode = v),
                   ),
                   const Divider(color: Colors.white24),
 
