@@ -9,7 +9,8 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProviderStateMixin {
+class _RegisterScreenState extends State<RegisterScreen>
+    with SingleTickerProviderStateMixin {
   final _nameCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
@@ -24,8 +25,9 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 10))
-      ..repeat(reverse: true);
+    _controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 10))
+          ..repeat(reverse: true);
     _anim1 = Tween<double>(begin: -100, end: 100)
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     _anim2 = Tween<double>(begin: 100, end: -100)
@@ -53,12 +55,16 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 600;
+    final isTablet = size.width >= 600 && size.width < 1000;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
           Container(color: const Color(0xFF1E1E1E)),
 
+          // ==== ANIMAÇÃO DE FUNDO ====
           AnimatedBuilder(
             animation: _controller,
             builder: (context, _) {
@@ -67,7 +73,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
                   _blurCircle(
                     left: _anim1.value,
                     top: 0,
-                    color: const Color(0xFF7C3AED).withOpacity(0.4),
+                    color: const Color(0xFF7C3AED).withOpacity(0.35),
                     size: size.width * 0.6,
                   ),
                   _blurCircle(
@@ -81,21 +87,37 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
             },
           ),
 
+          // ==== CONTEÚDO ====
           Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Crie sua conta ",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white,
-                  ),
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 24 : 48,
+                vertical: isMobile ? 40 : 60,
+              ),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: isMobile
+                      ? 360
+                      : isTablet
+                          ? 420
+                          : 480,
                 ),
-                const SizedBox(height: 24),
-                _registerCard(context),
-              ],
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Crie sua conta",
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    _registerCard(context),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
@@ -104,13 +126,16 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
   }
 
   Widget _registerCard(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isSmall = size.width < 600;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(18),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
-          width: 340,
-          padding: const EdgeInsets.all(24),
+          width: double.infinity,
+          padding: EdgeInsets.all(isSmall ? 20 : 28),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.08),
             borderRadius: BorderRadius.circular(18),
@@ -128,6 +153,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
                 ),
               ),
               const SizedBox(height: 20),
+
               _glassInput("Nome completo", _nameCtrl, Icons.person_outline, false),
               const SizedBox(height: 14),
               _glassInput("E-mail", _emailCtrl, Icons.email_outlined, false),
@@ -135,8 +161,9 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
               _glassInput("Senha", _passCtrl, Icons.lock_outline, true),
               const SizedBox(height: 14),
               _glassInput("Confirmar senha", _confirmCtrl, Icons.lock_outline, true),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
 
+              // ==== BOTÃO REGISTRAR ====
               GestureDetector(
                 onTap: isLoading ? null : _register,
                 child: AnimatedContainer(
@@ -148,7 +175,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
                     gradient: LinearGradient(
                       colors: isLoading
                           ? [Colors.grey.shade800, Colors.grey.shade700]
-                          : [const Color(0xFF7C3AED), const Color(0xFFA855F7)],
+                          : const [Color(0xFF7C3AED), Color(0xFFA855F7)],
                     ),
                     boxShadow: [
                       BoxShadow(
@@ -179,6 +206,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
                   ),
                 ),
               ),
+
               const SizedBox(height: 16),
 
               Center(
@@ -205,7 +233,8 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
     );
   }
 
-  Widget _glassInput(String label, TextEditingController ctrl, IconData icon, bool obscure) {
+  Widget _glassInput(
+      String label, TextEditingController ctrl, IconData icon, bool obscure) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
       child: BackdropFilter(
@@ -221,12 +250,19 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
             obscureText: obscure,
             style: const TextStyle(color: Colors.white),
             cursorColor: const Color(0xFFA855F7),
+            textInputAction:
+                obscure ? TextInputAction.done : TextInputAction.next,
+            onSubmitted: (v) {
+              if (obscure && !isLoading) _register();
+            },
             decoration: InputDecoration(
               prefixIcon: Icon(icon, color: Colors.white70),
               labelText: label,
-              labelStyle: const TextStyle(color: Colors.white70, fontSize: 14),
+              labelStyle:
+                  const TextStyle(color: Colors.white70, fontSize: 14),
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
             ),
           ),
         ),

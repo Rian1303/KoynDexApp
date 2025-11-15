@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'transactions_screen.dart';
 import 'settings_screen.dart';
+import 'user_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -15,205 +16,232 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isWide = MediaQuery.of(context).size.width > 900;
+
     return Scaffold(
       backgroundColor: const Color(0xFF1E1E1E),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            // ===== SIDEBAR =====
-            _Sidebar(
-              selectedIndex: selectedIndex,
-              onSelect: (i) => setState(() => selectedIndex = i),
-            ),
-
-            const SizedBox(width: 16),
-
-            // ===== MAIN PANEL =====
-            Expanded(
-              flex: 3,
-              child: _GlassPanel(
-                child: Stack(
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (isWide) {
+              // ====== LAYOUT DESKTOP / WEB / WINDOWS ======
+              return Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "MoneyYOU",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          const SizedBox(height: 18),
-
-                          // Exibe KPIs somente na Dashboard e Transações
-                          if (selectedIndex == 0 || selectedIndex == 1) ...[
-                            _buildKpiRow(),
-                            const SizedBox(height: 20),
-                          ],
-
-                          // Conteúdo dinâmico conforme tela selecionada
-                          Expanded(
-                            child: _buildMainContent(selectedIndex),
-                          ),
-                        ],
-                      ),
+                    _Sidebar(
+                      selectedIndex: selectedIndex,
+                      onSelect: (i) => setState(() => selectedIndex = i),
                     ),
-
-                    // ===== BOTÃO DE EXPORTAR PDF =====
-                    Positioned(
-                      right: 20,
-                      bottom: 20,
-                      child: FloatingActionButton.extended(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text("Exportar PDF"),
-                              content: const Text(
-                                "Relatório exportado com sucesso!",
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  child: const Text("OK"),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.picture_as_pdf),
-                        label: const Text("Exportar PDF"),
-                        backgroundColor: Colors.white.withOpacity(0.15),
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                      ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      flex: 3,
+                      child: _buildMainPanel(),
                     ),
                   ],
                 ),
-              ),
-            ),
-          ],
+              );
+            } else {
+              // ====== LAYOUT MOBILE / TABLET ======
+              return Column(
+                children: [
+                  Expanded(child: _buildMainPanel()),
+                  _BottomNavBar(
+                    selectedIndex: selectedIndex,
+                    onSelect: (i) => setState(() => selectedIndex = i),
+                  ),
+                ],
+              );
+            }
+          },
         ),
       ),
     );
   }
 
-  // ======== KPIs (Saldo, Receitas, Despesas) ========
-  Widget _buildKpiRow() {
-    return const Row(
-      children: [
-        Expanded(
-          child: _KpiCard(
-            label: "Saldo Total",
-            value: "R\$ 500",
-            color: Color(0xFF22C55E),
+  Widget _buildMainPanel() {
+    return _GlassPanel(
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "KoynDex Finance Dashboard",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 18),
+
+                if (selectedIndex == 0 || selectedIndex == 1) ...[
+                  _buildKpiRow(),
+                  const SizedBox(height: 20),
+                ],
+
+                Expanded(
+                  child: _buildMainContent(selectedIndex),
+                ),
+              ],
+            ),
           ),
-        ),
-        SizedBox(width: 12),
-        Expanded(
-          child: _KpiCard(
-            label: "Receitas",
-            value: "R\$ 1000",
-            color: Color(0xFFA855F7),
+
+          // ===== BOTÃO DE EXPORTAR PDF =====
+          Positioned(
+            right: 20,
+            bottom: 20,
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    backgroundColor: const Color(0xFF2D2D2D),
+                    title: const Text("Exportar PDF", style: TextStyle(color: Colors.white)),
+                    content: const Text("Relatório exportado com sucesso!",
+                        style: TextStyle(color: Colors.white70)),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text("OK", style: TextStyle(color: Colors.white)),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              icon: const Icon(Icons.picture_as_pdf),
+              label: const Text("Exportar PDF"),
+              backgroundColor: Colors.white.withOpacity(0.15),
+              foregroundColor: Colors.white,
+              elevation: 0,
+            ),
           ),
-        ),
-        SizedBox(width: 12),
-        Expanded(
-          child: _KpiCard(
-            label: "Despesas",
-            value: "R\$ 500",
-            color: Color(0xFFF87171),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  /// ======= CONTEÚDO PRINCIPAL DINÂMICO =======
+  Widget _buildKpiRow() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 600) {
+          // Layout vertical em telas pequenas
+          return Column(
+            children: const [
+              _KpiCard(label: "Saldo Total", value: "R\$ 500", color: Color(0xFF22C55E)),
+              SizedBox(height: 12),
+              _KpiCard(label: "Receitas", value: "R\$ 1000", color: Color(0xFFA855F7)),
+              SizedBox(height: 12),
+              _KpiCard(label: "Despesas", value: "R\$ 500", color: Color(0xFFF87171)),
+            ],
+          );
+        } else {
+          // Layout horizontal em telas grandes
+          return const Row(
+            children: [
+              Expanded(
+                child: _KpiCard(
+                  label: "Saldo Total",
+                  value: "R\$ 500",
+                  color: Color(0xFF22C55E),
+                ),
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: _KpiCard(
+                  label: "Receitas",
+                  value: "R\$ 1000",
+                  color: Color(0xFFA855F7),
+                ),
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: _KpiCard(
+                  label: "Despesas",
+                  value: "R\$ 500",
+                  color: Color(0xFFF87171),
+                ),
+              ),
+            ],
+          );
+        }
+      },
+    );
+  }
+
   Widget _buildMainContent(int index) {
-    if (index == 0) {
-      // === DASHBOARD PRINCIPAL ===
-      return Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: Row(
-          children: [
-            // RESUMO DE TRANSAÇÕES
-            Expanded(
-              flex: 3,
-              child: _GlassPanel(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        "Resumo de Transações",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+    switch (index) {
+      case 0:
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Column(
+              children: [
+                _GlassPanel(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(
+                          "Resumo de Transações",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 20),
-                      Expanded(
-                        child: Center(
+                        SizedBox(height: 20),
+                        Center(
                           child: Text(
                             "Gráficos e resumo geral aparecerão aqui.",
                             style: TextStyle(color: Colors.white70),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-            const SizedBox(width: 40),
-            // NEWSLETTER
-            Expanded(
-              flex: 2,
-              child: _GlassPanel(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        "News Letter",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                const SizedBox(height: 20),
+                _GlassPanel(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(
+                          "Newsletter",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 20),
-                      Expanded(
-                        child: Center(
+                        SizedBox(height: 20),
+                        Center(
                           child: Text(
                             "Espaço para novidades e avisos.",
                             style: TextStyle(color: Colors.white70),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      );
-    } else if (index == 1) {
-      // === TELA DE TRANSAÇÕES ===
-      return const TransactionsScreen();
-    } else {
-      // === CONFIGURAÇÕES ===
-      return const SettingsScreen();
+          ),
+        );
+
+      case 1:
+        return const TransactionsScreen();
+      case 3:
+        return const UserScreen();
+      default:
+        return const SettingsScreen();
     }
   }
 }
@@ -234,6 +262,7 @@ class _Sidebar extends StatelessWidget {
       {'icon': Icons.dashboard_outlined, 'label': 'Dashboard'},
       {'icon': Icons.list_alt_outlined, 'label': 'Transações'},
       {'icon': Icons.settings_outlined, 'label': 'Configurações'},
+      {'icon': Icons.person_outline, 'label': 'Usuário'},
     ];
 
     return ClipRRect(
@@ -250,23 +279,20 @@ class _Sidebar extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 24),
-              const Text(
-                "-*- MoneyYOU -*-",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 18,
-                ),
+              Image.asset(
+                'assets/images/logo.png',
+                width: 80,
+                height: 80,
+                fit: BoxFit.contain,
               ),
               const SizedBox(height: 32),
-              for (int i = 0; i < items.length; i++) ...[
+              for (int i = 0; i < items.length; i++)
                 _SidebarItem(
                   icon: items[i]['icon'] as IconData,
                   label: items[i]['label'] as String,
                   selected: selectedIndex == i,
                   onTap: () => onSelect(i),
                 ),
-              ],
               const Spacer(),
               const Padding(
                 padding: EdgeInsets.all(12.0),
@@ -283,7 +309,35 @@ class _Sidebar extends StatelessWidget {
   }
 }
 
-/// ======= ITEM DA SIDEBAR =======
+/// ======= BOTTOM NAV (para Mobile) =======
+class _BottomNavBar extends StatelessWidget {
+  final int selectedIndex;
+  final Function(int) onSelect;
+
+  const _BottomNavBar({
+    required this.selectedIndex,
+    required this.onSelect,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      backgroundColor: Colors.black.withOpacity(0.5),
+      selectedItemColor: const Color(0xFFA855F7),
+      unselectedItemColor: Colors.white54,
+      currentIndex: selectedIndex,
+      onTap: onSelect,
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.dashboard_outlined), label: "Dashboard"),
+        BottomNavigationBarItem(icon: Icon(Icons.list_alt_outlined), label: "Transações"),
+        BottomNavigationBarItem(icon: Icon(Icons.settings_outlined), label: "Configurações"),
+        BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Usuário"),
+      ],
+    );
+  }
+}
+
+/// ======= COMPONENTES GENÉRICOS =======
 class _SidebarItem extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -315,10 +369,8 @@ class _SidebarItem extends StatelessWidget {
   }
 }
 
-/// ======= CARD GLASS GENÉRICO =======
 class _GlassPanel extends StatelessWidget {
   final Widget child;
-
   const _GlassPanel({required this.child});
 
   @override
@@ -340,7 +392,6 @@ class _GlassPanel extends StatelessWidget {
   }
 }
 
-/// ======= KPI CARD =======
 class _KpiCard extends StatelessWidget {
   final String label;
   final String value;
@@ -368,10 +419,7 @@ class _KpiCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                label,
-                style: const TextStyle(color: Colors.white70, fontSize: 13),
-              ),
+              Text(label, style: const TextStyle(color: Colors.white70, fontSize: 13)),
               const SizedBox(height: 8),
               Text(
                 value,

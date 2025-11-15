@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
 
 void main() {
-  runApp(const MoneyYouApp());
+  runApp(const KoynDexApp());
 }
 
-class MoneyYouApp extends StatelessWidget {
-  const MoneyYouApp({super.key});
+class KoynDexApp extends StatelessWidget {
+  const KoynDexApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,3 +20,4 @@ class MoneyYouApp extends StatelessWidget {
     );
   }
 }
+ 
