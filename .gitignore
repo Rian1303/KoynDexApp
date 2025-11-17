@@ -1,54 +1,67 @@
-
----
-
-## ⚙️ **`.gitignore` (for Flutter projects)**
-
-# Flutter/Dart
-.dart_tool/
-.packages
-```gitignore
-# Flutter/Dart
+# ===========================
+# FLUTTER / DART
+# ===========================
 .dart_tool/
 .packages
 build/
-pubspec.lock
+.pub-cache/
 .flutter-plugins
 .flutter-plugins-dependencies
 .flutter-versions
+pubspec.lock
 
-# IDEs
+# Generated files
+lib/firebase_options.dart
+
+# ===========================
+# IDEs / EDITORS
+# ===========================
 .vscode/
 .idea/
 *.iml
 
+# ===========================
+# OS FILES
+# ===========================
 # macOS
 .DS_Store
 
 # Windows
 Thumbs.db
 
-# Android
+# Linux
+*~
+
+# ===========================
+# ANDROID
+# ===========================
 **/android/.gradle/
 **/android/local.properties
 **/android/key.properties
 **/android/app/google-services.json
+**/android/app/debug.keystore
 
+# ===========================
 # iOS
-**/ios/Flutter/Flutter.framework
-**/ios/Flutter/Flutter.podspec
-**/ios/ServiceDefinitions.json
+# ===========================
 **/ios/Pods/
 **/ios/Podfile.lock
+**/ios/ServiceDefinitions.json
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
 **/ios/Runner/GoogleService-Info.plist
-lib/firebase_options.dart
-# Firebase credentials
+
+# ===========================
+# FIREBASE (extra safeties)
+# ===========================
 firebase.json
-lib/firebase_options.dart
 
-# Logs
+# ===========================
+# LOGS / TEMP / BACKUP
+# ===========================
 *.log
-
-# Backup or temporary files
 *.tmp
+*.temp
 *.swp
 *.bak
+*.old
