@@ -118,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "Bem-vindo de volta 👋",
+                      "KoynDexApp",
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.w800,
@@ -165,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                "Acesse sua conta para continuar",
+                "Acess your account to continue",
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 15,
@@ -174,9 +174,9 @@ class _LoginScreenState extends State<LoginScreen>
               ),
               const SizedBox(height: 20),
               _glassInput(
-                  "Usuário ou E-mail", _emailCtrl, Icons.person_outline, false),
+                  "User or E-mail", _emailCtrl, Icons.person_outline, false),
               const SizedBox(height: 14),
-              _glassInput("Senha", _passCtrl, Icons.lock_outline, true),
+              _glassInput("Password", _passCtrl, Icons.lock_outline, true),
               const SizedBox(height: 24),
 
               // ===== BOTÃO LOGIN =====
@@ -236,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen>
                     );
                   },
                   child: const Text(
-                    "Não tem uma conta? Registre-se",
+                    "Dont`t have an account? Sign Up!",
                     style: TextStyle(
                       color: Color(0xffa855f7),
                       fontWeight: FontWeight.w600,

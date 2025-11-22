@@ -100,7 +100,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   context: context,
                   builder: (context) => AlertDialog(
                     backgroundColor: const Color(0xFF2D2D2D),
-                    title: const Text("Exportar PDF", style: TextStyle(color: Colors.white)),
+                    title: const Text("PDF Export", style: TextStyle(color: Colors.white)),
                     content: const Text("Relatório exportado com sucesso!",
                         style: TextStyle(color: Colors.white70)),
                     actions: [
@@ -113,7 +113,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 );
               },
               icon: const Icon(Icons.picture_as_pdf),
-              label: const Text("Exportar PDF"),
+              label: const Text("PDF Export"),
               backgroundColor: Colors.white.withOpacity(0.15),
               foregroundColor: Colors.white,
               elevation: 0,
@@ -131,11 +131,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           // Layout vertical em telas pequenas
           return const Column(
             children: [
-              _KpiCard(label: "Saldo Total", value: "R\$ 500", color: Color(0xFF22C55E)),
+              _KpiCard(label: "Total Balance", value: "R\$ 500", color: Color(0xFF22C55E)),
               SizedBox(height: 12),
-              _KpiCard(label: "Receitas", value: "R\$ 1000", color: Color(0xFFA855F7)),
+              _KpiCard(label: "Insues", value: "R\$ 1000", color: Color(0xFFA855F7)),
               SizedBox(height: 12),
-              _KpiCard(label: "Despesas", value: "R\$ 500", color: Color(0xFFF87171)),
+              _KpiCard(label: "Expends", value: "R\$ 500", color: Color(0xFFF87171)),
             ],
           );
         } else {
@@ -144,7 +144,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             children: [
               Expanded(
                 child: _KpiCard(
-                  label: "Saldo Total",
+                  label: "Total Balance",
                   value: "R\$ 500",
                   color: Color(0xFF22C55E),
                 ),
@@ -152,7 +152,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               SizedBox(width: 12),
               Expanded(
                 child: _KpiCard(
-                  label: "Receitas",
+                  label: "Insues",
                   value: "R\$ 1000",
                   color: Color(0xFFA855F7),
                 ),
@@ -160,7 +160,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               SizedBox(width: 12),
               Expanded(
                 child: _KpiCard(
-                  label: "Despesas",
+                  label: "Expends",
                   value: "R\$ 500",
                   color: Color(0xFFF87171),
                 ),
@@ -187,7 +187,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Resumo de Transações",
+                          "Transactions Resume",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -197,7 +197,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         SizedBox(height: 20),
                         Center(
                           child: Text(
-                            "Gráficos e resumo geral aparecerão aqui.",
+                            "graphics and charts placeholder",
                             style: TextStyle(color: Colors.white70),
                           ),
                         ),
@@ -223,7 +223,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         SizedBox(height: 20),
                         Center(
                           child: Text(
-                            "Espaço para novidades e avisos.",
+                            "Newsletter signup placeholder",
                             style: TextStyle(color: Colors.white70),
                           ),
                         ),
@@ -260,9 +260,9 @@ class _Sidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     final items = [
       {'icon': Icons.dashboard_outlined, 'label': 'Dashboard'},
-      {'icon': Icons.list_alt_outlined, 'label': 'Transações'},
-      {'icon': Icons.settings_outlined, 'label': 'Configurações'},
-      {'icon': Icons.person_outline, 'label': 'Usuário'},
+      {'icon': Icons.list_alt_outlined, 'label': 'Transactions'},
+      {'icon': Icons.settings_outlined, 'label': 'Settings'},
+      {'icon': Icons.person_outline, 'label': 'User'},
     ];
 
     return ClipRRect(
@@ -297,7 +297,7 @@ class _Sidebar extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.all(12.0),
                 child: Text(
-                  "v0.0.3-alpha",
+                  "v0.0.4-alpha\nA KoynDex Company APP",
                   style: TextStyle(color: Colors.white38, fontSize: 12),
                 ),
               ),
