@@ -131,11 +131,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           // Layout vertical em telas pequenas
           return const Column(
             children: [
-              _KpiCard(label: "Total Balance", value: "R\$ 500", color: Color(0xFF22C55E)),
+              _KpiCard(label: "Total Balance", value: "\$ 500", color: Color(0xFF22C55E)),
               SizedBox(height: 12),
-              _KpiCard(label: "Insues", value: "R\$ 1000", color: Color(0xFFA855F7)),
+              _KpiCard(label: "Insues", value: "\$ 1000", color: Color(0xFFA855F7)),
               SizedBox(height: 12),
-              _KpiCard(label: "Expends", value: "R\$ 500", color: Color(0xFFF87171)),
+              _KpiCard(label: "Expends", value: "\$ 500", color: Color(0xFFF87171)),
             ],
           );
         } else {
@@ -145,7 +145,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Expanded(
                 child: _KpiCard(
                   label: "Total Balance",
-                  value: "R\$ 500",
+                  value: "\$ 500",
                   color: Color(0xFF22C55E),
                 ),
               ),
@@ -153,7 +153,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Expanded(
                 child: _KpiCard(
                   label: "Insues",
-                  value: "R\$ 1000",
+                  value: "\$ 1000",
                   color: Color(0xFFA855F7),
                 ),
               ),
@@ -161,7 +161,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Expanded(
                 child: _KpiCard(
                   label: "Expends",
-                  value: "R\$ 500",
+                  value: "\$ 500",
                   color: Color(0xFFF87171),
                 ),
               ),
